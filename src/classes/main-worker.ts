@@ -5,4 +5,4 @@
 import { parentPort } from 'worker_threads';
 import mainBase from './main-base';
 
-mainBase(async (msg: any) => parentPort.postMessage(msg), parentPort);
+mainBase(async (msg: any) => parentPort.postMessage(msg, ArrayBuffer.isView(msg) ? [msg.buffer] : []), parentPort);

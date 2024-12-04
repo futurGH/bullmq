@@ -101,7 +101,9 @@ export class Scripts {
       queueKeys.events,
     ];
 
-    keys.push(pack(args), job.data, encodedOpts);
+    const data = job.data instanceof Uint8Array ? `${job.data.slice(0, 32)}` : `${job.data}`;
+
+    keys.push(pack(args), `${data}`, encodedOpts);
     return this.execCommand(client, 'addDelayedJob', keys);
   }
 
@@ -123,7 +125,9 @@ export class Scripts {
       queueKeys.pc,
     ];
 
-    keys.push(pack(args), job.data, encodedOpts);
+    const data = job.data instanceof Uint8Array ? `${job.data.slice(0, 32)}` : `${job.data}`;
+
+    keys.push(pack(args), `${data}`, encodedOpts);
     return this.execCommand(client, 'addPrioritizedJob', keys);
   }
 
@@ -141,7 +145,9 @@ export class Scripts {
       queueKeys.events,
     ];
 
-    keys.push(pack(args), job.data, encodedOpts);
+    const data = job.data instanceof Uint8Array ? `${job.data.slice(0, 32)}` : `${job.data}`;
+
+    keys.push(pack(args), `${data}`, encodedOpts);
     return this.execCommand(client, 'addParentJob', keys);
   }
 
@@ -163,7 +169,9 @@ export class Scripts {
       queueKeys.marker,
     ];
 
-    keys.push(pack(args), job.data, encodedOpts);
+    const data = job.data instanceof Uint8Array ? `${job.data.slice(0, 32)}` : `${job.data}`;
+
+    keys.push(pack(args), `${data}`, encodedOpts);
     return this.execCommand(client, 'addStandardJob', keys);
   }
 

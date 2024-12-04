@@ -4,7 +4,7 @@ import { ParentKeys } from './parent';
 export interface JobJson {
   id: string;
   name: string;
-  data: string;
+  data: string | ArrayBufferView;
   opts: RedisJobOptions;
   progress: number | object;
   attemptsMade: number;
@@ -26,7 +26,7 @@ export interface JobJson {
 export interface JobJsonRaw {
   id: string;
   name: string;
-  data: string;
+  data: string | ArrayBufferView;
   delay: string;
   opts: string;
   progress: string;

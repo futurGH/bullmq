@@ -14,6 +14,7 @@ import {
   Tracer,
 } from './interfaces';
 import { EventEmitter } from 'events';
+import type { TransferListItem } from 'worker_threads';
 import * as semver from 'semver';
 
 import { SpanKind, TelemetryAttributes } from './enums';
@@ -172,7 +173,7 @@ export function isNotConnectionError(error: Error): boolean {
 
 interface procSendLike {
   send?(message: any, callback?: (error: Error | null) => void): boolean;
-  postMessage?(message: any): void;
+  postMessage?(message: any, transferList?: TransferListItem[]): void;
 }
 
 export const asyncSend = <T extends procSendLike>(
@@ -189,7 +190,7 @@ export const asyncSend = <T extends procSendLike>(
         }
       });
     } else if (typeof proc.postMessage === 'function') {
-      resolve(proc.postMessage(msg));
+      resolve(proc.postMessage(msg, ArrayBuffer.isView(msg) ? [msg.buffer] : []));
     } else {
       resolve();
     }

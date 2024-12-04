@@ -116,7 +116,7 @@ export class ChildProcessor {
   ): SandboxedJob {
     const wrappedJob = {
       ...job,
-      data: JSON.parse(job.data || '{}'),
+      data: ArrayBuffer.isView(job.data) ? job.data : JSON.parse(job.data || '{}'),
       opts: job.opts,
       returnValue: JSON.parse(job.returnvalue || '{}'),
       /*

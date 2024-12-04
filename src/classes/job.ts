@@ -325,7 +325,7 @@ export class Job<
     json: JobJsonRaw,
     jobId?: string,
   ): Job<T, R, N> {
-    const data = JSON.parse(json.data || '{}');
+    const data = ArrayBuffer.isView(json.data) ? json.data : JSON.parse(json.data || '{}');
     const opts = optsFromJSON(json.opts);
 
     const job = new this<T, R, N>(
@@ -446,10 +446,15 @@ export class Job<
    * @returns
    */
   asJSON(): JobJson {
+    const data = typeof this.data === 'undefined'
+      ? '{}'
+      : ArrayBuffer.isView(this.data)
+      ? this.data
+      : JSON.stringify(this.data);
     return removeUndefinedFields<JobJson>({
       id: this.id,
       name: this.name,
-      data: JSON.stringify(typeof this.data === 'undefined' ? {} : this.data),
+      data,
       opts: optsAsJSON(this.opts),
       parent: this.parent ? { ...this.parent } : undefined,
       parentKey: this.parentKey,
@@ -1213,9 +1218,10 @@ export class Job<
   }
 
   protected validateOptions(jobData: JobJson) {
+    const byteLength = typeof jobData.data === 'string' ? lengthInUtf8Bytes(jobData.data) : jobData.data.byteLength;
     const exceedLimit =
       this.opts.sizeLimit &&
-      lengthInUtf8Bytes(jobData.data) > this.opts.sizeLimit;
+      byteLength > this.opts.sizeLimit;
 
     if (exceedLimit) {
       throw new Error(

@@ -132,7 +132,7 @@ export class Child extends EventEmitter {
           }
         });
       } else if (this.worker) {
-        resolve(this.worker.postMessage(msg));
+        resolve(this.worker.postMessage(msg, ArrayBuffer.isView(msg) ? [msg.buffer] : []));
       } else {
         resolve();
       }
